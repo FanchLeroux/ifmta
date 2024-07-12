@@ -48,3 +48,6 @@ pip install -e .
 #### Usage and examples
 
 You can import ifmta and start designing your first EODs!
+
+As an example, the script main_hologram_optimisation provide the workflow used by François Leroux for the design of EOD to be used in smart contact lenses, during his master thesis in spring 2024.
+
