@@ -139,11 +139,11 @@ def Replicate(phase_holo, n_replications):
     Last update : 2024.03.05, Brest
     Comments : Peut servir à augmenter la taille
 
-    Inputs : MANDATORY : array {np.array 2D} : the array to zeros padd
+    Inputs : MANDATORY : 
 
-              OPTIONAL : zeros_padding_factor {int} : the zeros padding factor
+              OPTIONAL : 
 
-    Outputs : array_zeros_padded : the array zeros padded
+    Outputs : phase_holo_replicated
     """
 
     phase_holo_replicated = np.full(np.array(phase_holo.shape) * n_replications, np.NAN)

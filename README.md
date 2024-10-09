@@ -28,7 +28,7 @@ Now let's download the ifmta package from gitlab. Place yourself in the folder o
 and run the following code :
 
 ```bash
-git clone https://gitlab.imt-atlantique.fr/opt/holography/ifmta
+git clone https://github.com/FanchLeroux/ifmta
 ```
 
 The ifmta package uses various python packages. To install them all at once yo can run the following code :

@@ -69,11 +69,11 @@ def PropagateComplexAmplitudeScreen(object_field, *, zero_padding_factor=None,
       
     Inputs : MANDATORY : complexAmplitudeScreen {np.array 2D} : the complex amplitude screen
                         
-    Outputs : image plane irradiance
+    Outputs : image plane complexe amplitude
     """
     
     if image_pp == None and zero_padding_factor == None:
-        image = np.abs(np.fft.fftshift(np.fft.fft2(object_field)))**2
+        image = np.fft.fftshift(np.fft.fft2(object_field))
         
         if image_length == None:
             return image
@@ -84,7 +84,7 @@ def PropagateComplexAmplitudeScreen(object_field, *, zero_padding_factor=None,
         
     elif image_pp == None and zero_padding_factor != None:
         object_field_padded = np.pad(object_field, (0, (zero_padding_factor-1)*np.max(object_field.shape)))
-        image = np.abs(np.fft.fftshift(np.fft.fft2(object_field_padded)))**2
+        image = np.fft.fftshift(np.fft.fft2(object_field_padded))
         
         if image_length == None:
             return image
@@ -102,7 +102,7 @@ def PropagateComplexAmplitudeScreen(object_field, *, zero_padding_factor=None,
             object_size = object_length//object_pp
             object_field = np.pad(object_field, (0,int(object_size-object_field.shape[0])))
             image_pp = wavelength * propagation_distance / (object_field.shape[0]*object_pp)
-            image = np.abs(np.fft.fftshift(np.fft.fft2(object_field)))**2
+            image = np.fft.fftshift(np.fft.fft2(object_field))
             
             if image_length == None:
                 return image
@@ -113,7 +113,7 @@ def PropagateComplexAmplitudeScreen(object_field, *, zero_padding_factor=None,
             
         else:
             print("WARNING : no zero padding needed to achieve image_pp requierement")
-            image = np.abs(np.fft.fftshift(np.fft.fft2(object_field)))**2
+            image = np.fft.fftshift(np.fft.fft2(object_field))
             n = int(image_pp//image_pp_original)
             new_size_0 = int(image.shape[0] - image.shape[0]%n)
             new_size_1 = int(image.shape[1] - image.shape[1]%n)

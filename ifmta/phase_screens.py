@@ -13,7 +13,7 @@ from ifmta.tools import Discretization
 # 8<------------------------- Functions definitions ----------------------
 
 
-def Lens(f, *, wavelength=0.5e-6, sizeSupport=[128, 128], samplingStep=1e-4, n_levels=0):
+def Lens(f, *, wavelength=0.5e-6, size_support=[128, 128], samplingStep=1e-4, n_levels=0):
     
     """
     Lens : generate a phase screen correspnding to a thin lens under paraxial approximation
@@ -28,7 +28,7 @@ def Lens(f, *, wavelength=0.5e-6, sizeSupport=[128, 128], samplingStep=1e-4, n_l
     Inputs : MANDATORY : f : focal length of the lens {float}[m], f>0 => convergent lens, f<0 => divergent lens
     
               OPTIONAL :  wavelenght {float}[m] : wavelenght - default value: 0.5 µm
-                          sizeSupport {tupple (1x2)}[pixel] : resolution of the support - default value: [128, 128]
+                          size_support {tupple (1x2)}[pixel] : resolution of the support - default value: [128, 128]
                           samplingStep {float}[m] : physical length of on pixel of the support - default value: 1 mm
                           n_levels {int} : number of levels over which the phase needs to be quantified. 
                                            default value: 0, no Discretization
@@ -36,8 +36,8 @@ def Lens(f, *, wavelength=0.5e-6, sizeSupport=[128, 128], samplingStep=1e-4, n_l
     Outputs : phase, values between -pi and pi
     """
     
-    [X, Y] = np.meshgrid(np.arange(-sizeSupport[1]//2+sizeSupport[1]%2, sizeSupport[1]//2+sizeSupport[1]%2), 
-                         np.arange(sizeSupport[0]//2, -sizeSupport[0]//2, step=-1))
+    [X, Y] = np.meshgrid(np.arange(-size_support[1]//2+size_support[1]%2, size_support[1]//2+size_support[1]%2), 
+                         np.arange(size_support[0]//2, -size_support[0]//2, step=-1))
     
     X = samplingStep * X
     Y = samplingStep * Y
@@ -49,7 +49,7 @@ def Lens(f, *, wavelength=0.5e-6, sizeSupport=[128, 128], samplingStep=1e-4, n_l
     return np.asarray(phase, dtype=float)
     
 
-def Tilt(deltaPhi, *, sizeSupport=[128, 128], samplingStep=1e-4, n_levels=0):
+def Tilt(delta_phi, *, size_support=[128, 128], samplingStep=1e-4, n_levels=0, direction='x'):
     
     """
     Tilt : generate a phase screen correspnding to a tilt in x
@@ -60,23 +60,27 @@ def Tilt(deltaPhi, *, sizeSupport=[128, 128], samplingStep=1e-4, n_levels=0):
     Last update : 2024.03.04, Brest
     Comments : For even support size, coordinates are defined like [-2,-1,0,1] (N = 4)
       
-    Inputs : MANDATORY : deltaPhi [rad] : absolute phase difference between the edges of the phase screen
+    Inputs : MANDATORY : delta_phi [rad] : absolute phase difference between the edges of the phase screen
     
               OPTIONAL :  wavelenght {float}[m] : wavelenght - default value: 0.5 µm
-                          sizeSupport {tupple (1x2)}[pixel] : resolution of the support - default value: [128, 128]
+                          size_support {tupple (1x2)}[pixel] : resolution of the support - default value: [128, 128]
                           n_levels {int} : number of levels over which the phase needs to be quantified. 
                                            default value: 0, no Discretization
                         
     Outputs : phase, values between -pi and pi
     """
 
-    [X, Y] = np.meshgrid(np.arange(0,sizeSupport[0]), np.arange(0,sizeSupport[1]))
+    [X, Y] = np.meshgrid(np.arange(0,size_support[0]), np.arange(0,size_support[1]))
     
-    X = np.asarray(X, dtype=np.float32)
+    if direction == 'x':
+        X = np.asarray(X, dtype=np.float32)    
+        X /= np.float32(size_support[0])
+        phase = X * delta_phi
     
-    X /= np.float32(sizeSupport[0])
-    
-    phase = X * deltaPhi
+    elif direction == 'y':
+        Y = np.asarray(Y, dtype=np.float32)    
+        Y /= np.float32(size_support[0])
+        phase = Y * delta_phi    
     
     phase = Discretization(phase, n_levels)
     
